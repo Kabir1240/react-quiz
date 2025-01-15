@@ -36,7 +36,7 @@ function  reducer(state, action) {
         error: action.payload
       }
     case 'start':
-      return {...state, status: 'active'}
+      return { ...state, status: 'active' }
     case 'newAnswer':
       const question = state.questions.at(state.index)
 
@@ -49,14 +49,20 @@ function  reducer(state, action) {
           state.points
       }
     case 'nextQuestion':
-      if(state.index === 14) {
-        return { 
-          ...state, 
-          status: 'finished', 
-          answer: null, 
-          highscore: state.points > state.highscore ? state.points : state.highscore 
-      }}
       return { ...state, index: state.index + 1, answer: null }
+    case 'finish':
+      return { 
+        ...state, 
+        status: 'finished', 
+        answer: null, 
+        highscore: state.points > state.highscore ? state.points : state.highscore
+      }
+    case 'restart':
+      return { 
+        ...initialState, 
+        questions: state.questions, 
+        highscore: state.highscore, 
+        status: 'ready' }
     default:
       throw new Error("Action not Recognized")
   }
@@ -111,6 +117,7 @@ function App() {
           numQuestions={numQuestions} />
         { status === 'finished' && (
           <FinishScreen 
+            dispatch={dispatch}
             points={points} 
             maxPoints={maxPoints}
             highscore={highscore} />
