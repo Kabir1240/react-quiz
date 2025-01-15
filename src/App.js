@@ -8,7 +8,10 @@ import Question from './components/Question';
 import NextButton from './components/NextButton';
 import Progress from './components/Progress';
 import FinishScreen from './components/FinishScreen';
+import Timer from './components/Timer';
+import Footer from './components/Footer';
 
+const SECS_PER_QUESTION = 30;
 
 const initialState = {
   questions: [],
@@ -18,6 +21,7 @@ const initialState = {
   answer: null,
   points: 0,
   highscore: 0,
+  secondsRemaining: 0,
   error: "",
 }
 
@@ -36,7 +40,10 @@ function  reducer(state, action) {
         error: action.payload
       }
     case 'start':
-      return { ...state, status: 'active' }
+      return { 
+        ...state, 
+        status: 'active', 
+        secondsRemaining: state.secondsRemaining = state.questions.length * SECS_PER_QUESTION }
     case 'newAnswer':
       const question = state.questions.at(state.index)
 
@@ -54,7 +61,7 @@ function  reducer(state, action) {
       return { 
         ...state, 
         status: 'finished', 
-        answer: null, 
+        answer: null,
         highscore: state.points > state.highscore ? state.points : state.highscore
       }
     case 'restart':
@@ -63,6 +70,8 @@ function  reducer(state, action) {
         questions: state.questions, 
         highscore: state.highscore, 
         status: 'ready' }
+    case 'timer':
+      return { ...state, secondsRemaining: state.secondsRemaining - 1 }
     default:
       throw new Error("Action not Recognized")
   }
@@ -77,6 +86,7 @@ function App() {
     answer,
     points,
     highscore,
+    secondsRemaining,
     error,
   } = state
   const numQuestions = questions.length;
@@ -110,11 +120,6 @@ function App() {
               answer={answer} />
           </>
           )}
-        <NextButton 
-          dispatch={dispatch} 
-          answer={answer} 
-          index={index} 
-          numQuestions={numQuestions} />
         { status === 'finished' && (
           <FinishScreen 
             dispatch={dispatch}
@@ -122,6 +127,17 @@ function App() {
             maxPoints={maxPoints}
             highscore={highscore} />
           )}
+        <Footer>
+          <NextButton 
+            dispatch={dispatch} 
+            answer={answer} 
+            index={index} 
+            numQuestions={numQuestions} />
+          
+          <Timer 
+            dispatch={dispatch} 
+            secondsRemaining={secondsRemaining} />
+        </Footer>
       </Main>
     </div>
   );
