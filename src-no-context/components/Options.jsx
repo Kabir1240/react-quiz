@@ -1,7 +1,4 @@
-import useQuiz from "../hooks/useQuiz";
-
-export default function Options() {
-    const { question, answer, newAnswer } = useQuiz();
+export default function Options({ question, dispatch, answer }) {
     const hasAnswered = answer !== null;
 
     return (
@@ -15,7 +12,7 @@ export default function Options() {
                             "wrong" :
                         ""}`}
                     key={option} 
-                    onClick={() => newAnswer(index)}
+                    onClick={() => dispatch({ type: "newAnswer", payload: index })}
                     disabled={hasAnswered} >
                         {option}
                 </button>

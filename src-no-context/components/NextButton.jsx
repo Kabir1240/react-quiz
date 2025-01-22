@@ -1,12 +1,9 @@
-import useQuiz from "../hooks/useQuiz"
-
-export default function NextButton() {
-    const { finishQuiz, nextQuestion, answer, index, numQuestions } = useQuiz();
+export default function NextButton({ dispatch, answer, index, numQuestions }) {
     if(answer === null) return null
     
     const isLastQuestion = index === numQuestions - 1
     const handleNextButton = () => {
-        isLastQuestion ? finishQuiz() : nextQuestion()
+        isLastQuestion ? dispatch({type: 'finish' }) : dispatch({type: 'nextQuestion' })
     }
 
     return (

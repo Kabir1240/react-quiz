@@ -1,7 +1,4 @@
-import useQuiz from "../hooks/useQuiz";
-
-export default function FinishScreen() {
-    const { restartQuiz, points, maxPoints, highscore } = useQuiz()
+export default function FinishScreen({ dispatch, points, maxPoints, highscore }) {
     const percentage = (points / maxPoints) * 100
 
     let emoji;
@@ -18,7 +15,7 @@ export default function FinishScreen() {
                 You scored <strong>{points}</strong> / {maxPoints} ({Math.ceil(percentage)}%)
             </p>
             <p className="highscore">Highscore: {highscore} points</p>
-            <button className="btn btn-ui" onClick={restartQuiz}>Restart Quiz</button>
+            <button className="btn btn-ui" onClick={() => dispatch({type: 'restart'})}>Restart Quiz</button>
         </>
     )
 }
